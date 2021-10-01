@@ -2,6 +2,8 @@
   "name": "@studiokloek/capacitor-plugin-mediacapture",
   "version": "1.0.0",
   "description": "This capacitor plugin allows iOS applications to capture media from the camera and microphone.",
+  "author": "Martijn Swart <opensource@studiokloek.nl>",
+  "license": "MIT",
   "main": "dist/plugin.js",
   "module": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
@@ -14,8 +16,6 @@
     "watch": "tsc --watch",
     "prepublishOnly": "npm run build"
   },
-  "author": "Martijn Swart",
-  "license": "MIT",
   "devDependencies": {
     "@capacitor/android": "^2.5.0",
     "@capacitor/core": "^2.5.0",
@@ -37,8 +37,11 @@
     "dist/",
     "ios/",
     "android/",
-    "CapacitorPluginMediacapture.podspec"
+    "StudioKloekCapacitorPluginMediacapture.podspec"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "capacitor",
     "plugin",
