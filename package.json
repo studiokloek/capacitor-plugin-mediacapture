@@ -37,7 +37,7 @@
     "dist/",
     "ios/",
     "android/",
-    "StudioKloekCapacitorPluginMediacapture.podspec"
+    "StudiokloekCapacitorPluginMediacapture.podspec"
   ],
   "publishConfig": {
     "access": "public"
