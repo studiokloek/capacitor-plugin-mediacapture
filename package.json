@@ -1,0 +1,61 @@
+{
+  "name": "@studiokloek/capacitor-plugin-mediacapture",
+  "version": "1.0.0",
+  "description": "This capacitor plugin allows iOS applications to capture media from the camera and microphone.",
+  "main": "dist/plugin.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "scripts": {
+    "lint": "npm run prettier -- --check && npm run swiftlint -- lint",
+    "prettier": "prettier \"**/*.{css,html,ts,js,java}\"",
+    "swiftlint": "node-swiftlint",
+    "build": "npm run clean && tsc && rollup -c rollup.config.js",
+    "clean": "rimraf ./dist",
+    "watch": "tsc --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "author": "Martijn Swart",
+  "license": "MIT",
+  "devDependencies": {
+    "@capacitor/android": "^2.4.7",
+    "@capacitor/core": "^2.4.7",
+    "@capacitor/ios": "^2.4.7",
+    "@ionic/prettier-config": "^1.0.1",
+    "@ionic/swiftlint-config": "^1.1.2",
+    "@rollup/plugin-node-resolve": "^8.4.0",
+    "prettier": "^2.2.1",
+    "prettier-plugin-java": "^0.8.3",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.45.2",
+    "swiftlint": "^1.0.1",
+    "typescript": "~3.9.9"
+  },
+  "peerDependencies": {
+    "@capacitor/core": "^2.4.7"
+  },
+  "files": [
+    "dist/",
+    "ios/",
+    "android/",
+    "CapacitorPluginMediacapture.podspec"
+  ],
+  "keywords": [
+    "capacitor",
+    "plugin",
+    "native"
+  ],
+  "capacitor": {
+    "ios": {
+      "src": "ios"
+    }
+  },
+  "prettier": "@ionic/prettier-config",
+  "swiftlint": "@ionic/swiftlint-config",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/studiokloek/capacitor-plugin-mediacapture"
+  },
+  "bugs": {
+    "url": "https://github.com/studiokloek/capacitor-plugin-mediacapture/issues"
+  }
+}
