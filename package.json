@@ -1,6 +1,6 @@
 {
   "name": "@studiokloek/capacitor-plugin-mediacapture",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This capacitor plugin allows iOS applications to capture media from the camera and microphone.",
   "author": "Martijn Swart <opensource@studiokloek.nl>",
   "license": "MIT",
