@@ -1,46 +1,77 @@
-import type { PluginListenerHandle } from '@capacitor/core';
-
-export enum RouteChangeReasons {
-  NEW_DEVICE_AVAILABLE = 'new-device-available',
-  OLD_DEVICE_UNAVAILABLE = 'old-device-unavailable',
-  CATEGORY_CHANGE = 'category-change',
-  OVERRIDE = 'override',
-  WAKE_FROM_SLEEP = 'wake-from-sleep',
-  NO_SUITABLE_ROUTE_FOR_CATEGORY = 'no-suitable-route-for-category',
-  ROUTE_CONFIGURATION_CHANGE = 'route-config-change',
-  UNKNOWN = 'unknown',
+// CAMERA
+export interface CameraSessionOptions {
+  video?: boolean;
+  audio?: boolean;
+  preset?: string;
+  position?: string;
+  fullFramePhotos?: boolean;
 }
 
-export enum InterruptionTypes {
-  BEGAN = 'began',
-  ENDED = 'ended',
+export interface CameraPreviewShowOptions {
+  frame?: { x: number; y: number; width: number; height: number };
+  useDeviceOrientation?: boolean;
+  gravity?: string;
+  fadeDuration?: number;
 }
 
-export enum MediaCapturePorts {
-  AIR_PLAY = 'airplay',
-  BLUETOOTH_LE = 'bluetooth-le',
-  BLUETOOTH_HFP = 'bluetooth-hfp',
-  BLUETOOTH_A2DP = 'bluetooth-a2dp',
-  BUILT_IN_SPEAKER = 'builtin-speaker',
-  BUILT_IN_RECEIVER = 'builtin-receiver',
-  HDMI = 'hdmi',
-  HEADPHONES = 'headphones',
-  LINE_OUT = 'line-out',
+export interface CameraPreviewHideOptions {
+  fadeDuration?: number;
 }
 
-export type OutputOverrideType = 'default' | 'speaker';
+export interface StartCameraRecordingOptions {
+  autoSave?: boolean;
+  useDeviceOrientation?: boolean;
+  duration?: number;
+}
 
-export type RouteChangeListener = (reason: RouteChangeReasons) => void;
-export type InterruptionListener = (type: InterruptionTypes) => void;
+export interface CameraRecordingResult {
+  url: string;
+}
+
+export interface GrabCameraImageOptions {
+  autoSave?: boolean;
+  autoOrientation?: boolean;
+  autoAdjust?: boolean;
+}
+
+export interface GrabCameraImageResult {
+  url: string;
+}
+
+// MICROPHONE
+export interface MicrophoneSessionOptions {
+  sampleRate?: number;
+  reuseRecorder?: boolean;
+  numChannels?: number;
+}
+
+export interface StartMicrophoneRecordingOptions {
+  duration?: number;
+}
+
+export interface MicrophoneRecordingResult {
+  url: string;
+}
+
 export interface MediaCapturePlugin {
-  currentOutputs(): Promise<MediaCapturePorts[]>;
-  overrideOutput(type: OutputOverrideType): Promise<boolean>;
-  addListener(
-    eventName: 'routeChanged',
-    listenerFunc: RouteChangeListener,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
-  addListener(
-    eventName: 'interruption',
-    listenerFunc: InterruptionListener,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  // CAMERA
+  startCameraSession(options: CameraSessionOptions): Promise<boolean>;
+  stopCameraSession(): Promise<boolean>;
+
+  showCameraPreview(options: CameraPreviewShowOptions): Promise<boolean>;
+  hideCameraPreview(options: CameraPreviewHideOptions): Promise<boolean>;
+
+  startCameraRecording(options: StartCameraRecordingOptions): Promise<boolean>;
+  stopCameraRecording(): Promise<undefined | CameraRecordingResult>;
+  grabCameraImage(
+    options: GrabCameraImageOptions,
+  ): Promise<undefined | GrabCameraImageResult>;
+
+  // MICROPHONE
+  startMicrophoneSession(options: MicrophoneSessionOptions): Promise<boolean>;
+  stopMicrophoneSession(): Promise<boolean>;
+  startMicrophoneRecording(
+    options: StartMicrophoneRecordingOptions,
+  ): Promise<boolean>;
+  stopMicrophoneRecording(): Promise<undefined | MicrophoneRecordingResult>;
 }
