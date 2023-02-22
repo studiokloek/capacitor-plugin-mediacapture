@@ -1,21 +1,37 @@
-# capacitor-plugin-mediacapture
+# @studiokloek/capacitor-plugin-mediacapture
 
-**This plugin works on iOS only.**
+test
 
-This plugin allows iOS applications to get capture media from the camera and microphone.
+## Install
 
-## Installation
+```bash
+npm install @studiokloek/capacitor-plugin-mediacapture
+npx cap sync
+```
 
-    npm install @studiokloek/capacitor-plugin-mediacapture
+## API
 
-For now this plugin works only in Capacitor 2.0+.
+<docgen-index>
 
-## Methods
+* [`echo(...)`](#echo)
 
-## License
+</docgen-index>
 
-MIT
+<docgen-api>
+<!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
 
-## Author
+### echo(...)
 
-Martijn Swart <https://studiokloek.nl>
+```typescript
+echo(options: { value: string; }) => Promise<{ value: string; }>
+```
+
+| Param         | Type                            |
+| ------------- | ------------------------------- |
+| **`options`** | <code>{ value: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
+
+--------------------
+
+</docgen-api>
