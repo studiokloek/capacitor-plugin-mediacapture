@@ -1,6 +1,6 @@
 # @studiokloek/capacitor-plugin-mediacapture
 
-test
+This capacitor plugin allows iOS applications to capture media from the camera and microphone.
 
 ## Install
 
@@ -13,18 +13,31 @@ npx cap sync
 
 <docgen-index>
 
-* [`startCameraSession(...)`](#startcamerasession)
-* [`stopCameraSession()`](#stopcamerasession)
-* [`showCameraPreview(...)`](#showcamerapreview)
-* [`hideCameraPreview(...)`](#hidecamerapreview)
-* [`startCameraRecording(...)`](#startcamerarecording)
-* [`stopCameraRecording()`](#stopcamerarecording)
-* [`grabCameraImage(...)`](#grabcameraimage)
-* [`startMicrophoneSession(...)`](#startmicrophonesession)
-* [`stopMicrophoneSession()`](#stopmicrophonesession)
-* [`startMicrophoneRecording(...)`](#startmicrophonerecording)
-* [`stopMicrophoneRecording()`](#stopmicrophonerecording)
-* [Interfaces](#interfaces)
+- [@studiokloek/capacitor-plugin-mediacapture](#studiokloekcapacitor-plugin-mediacapture)
+  - [Install](#install)
+  - [API](#api)
+    - [startCameraSession(...)](#startcamerasession)
+    - [stopCameraSession()](#stopcamerasession)
+    - [showCameraPreview(...)](#showcamerapreview)
+    - [hideCameraPreview(...)](#hidecamerapreview)
+    - [startCameraRecording(...)](#startcamerarecording)
+    - [stopCameraRecording()](#stopcamerarecording)
+    - [grabCameraImage(...)](#grabcameraimage)
+    - [startMicrophoneSession(...)](#startmicrophonesession)
+    - [stopMicrophoneSession()](#stopmicrophonesession)
+    - [startMicrophoneRecording(...)](#startmicrophonerecording)
+    - [stopMicrophoneRecording()](#stopmicrophonerecording)
+    - [Interfaces](#interfaces)
+      - [CameraSessionOptions](#camerasessionoptions)
+      - [CameraPreviewShowOptions](#camerapreviewshowoptions)
+      - [CameraPreviewHideOptions](#camerapreviewhideoptions)
+      - [StartCameraRecordingOptions](#startcamerarecordingoptions)
+      - [CameraRecordingResult](#camerarecordingresult)
+      - [GrabCameraImageResult](#grabcameraimageresult)
+      - [GrabCameraImageOptions](#grabcameraimageoptions)
+      - [MicrophoneSessionOptions](#microphonesessionoptions)
+      - [StartMicrophoneRecordingOptions](#startmicrophonerecordingoptions)
+      - [MicrophoneRecordingResult](#microphonerecordingresult)
 
 </docgen-index>
 
@@ -43,8 +56,7 @@ startCameraSession(options: CameraSessionOptions) => Promise<boolean>
 
 **Returns:** <code>Promise&lt;boolean&gt;</code>
 
---------------------
-
+---
 
 ### stopCameraSession()
 
@@ -54,8 +66,7 @@ stopCameraSession() => Promise<boolean>
 
 **Returns:** <code>Promise&lt;boolean&gt;</code>
 
---------------------
-
+---
 
 ### showCameraPreview(...)
 
@@ -69,8 +80,7 @@ showCameraPreview(options: CameraPreviewShowOptions) => Promise<boolean>
 
 **Returns:** <code>Promise&lt;boolean&gt;</code>
 
---------------------
-
+---
 
 ### hideCameraPreview(...)
 
@@ -84,8 +94,7 @@ hideCameraPreview(options: CameraPreviewHideOptions) => Promise<boolean>
 
 **Returns:** <code>Promise&lt;boolean&gt;</code>
 
---------------------
-
+---
 
 ### startCameraRecording(...)
 
@@ -99,8 +108,7 @@ startCameraRecording(options: StartCameraRecordingOptions) => Promise<boolean>
 
 **Returns:** <code>Promise&lt;boolean&gt;</code>
 
---------------------
-
+---
 
 ### stopCameraRecording()
 
@@ -110,8 +118,7 @@ stopCameraRecording() => Promise<undefined | CameraRecordingResult>
 
 **Returns:** <code>Promise&lt;<a href="#camerarecordingresult">CameraRecordingResult</a>&gt;</code>
 
---------------------
-
+---
 
 ### grabCameraImage(...)
 
@@ -125,8 +132,7 @@ grabCameraImage(options: GrabCameraImageOptions) => Promise<undefined | GrabCame
 
 **Returns:** <code>Promise&lt;<a href="#grabcameraimageresult">GrabCameraImageResult</a>&gt;</code>
 
---------------------
-
+---
 
 ### startMicrophoneSession(...)
 
@@ -140,8 +146,7 @@ startMicrophoneSession(options: MicrophoneSessionOptions) => Promise<boolean>
 
 **Returns:** <code>Promise&lt;boolean&gt;</code>
 
---------------------
-
+---
 
 ### stopMicrophoneSession()
 
@@ -151,8 +156,7 @@ stopMicrophoneSession() => Promise<boolean>
 
 **Returns:** <code>Promise&lt;boolean&gt;</code>
 
---------------------
-
+---
 
 ### startMicrophoneRecording(...)
 
@@ -166,8 +170,7 @@ startMicrophoneRecording(options: StartMicrophoneRecordingOptions) => Promise<bo
 
 **Returns:** <code>Promise&lt;boolean&gt;</code>
 
---------------------
-
+---
 
 ### stopMicrophoneRecording()
 
@@ -177,11 +180,9 @@ stopMicrophoneRecording() => Promise<undefined | MicrophoneRecordingResult>
 
 **Returns:** <code>Promise&lt;<a href="#microphonerecordingresult">MicrophoneRecordingResult</a>&gt;</code>
 
---------------------
-
+---
 
 ### Interfaces
-
 
 #### CameraSessionOptions
 
@@ -193,7 +194,6 @@ stopMicrophoneRecording() => Promise<undefined | MicrophoneRecordingResult>
 | **`position`**        | <code>string</code>  |
 | **`fullFramePhotos`** | <code>boolean</code> |
 
-
 #### CameraPreviewShowOptions
 
 | Prop                       | Type                                                                  |
@@ -203,13 +203,11 @@ stopMicrophoneRecording() => Promise<undefined | MicrophoneRecordingResult>
 | **`gravity`**              | <code>string</code>                                                   |
 | **`fadeDuration`**         | <code>number</code>                                                   |
 
-
 #### CameraPreviewHideOptions
 
 | Prop               | Type                |
 | ------------------ | ------------------- |
 | **`fadeDuration`** | <code>number</code> |
-
 
 #### StartCameraRecordingOptions
 
@@ -219,20 +217,17 @@ stopMicrophoneRecording() => Promise<undefined | MicrophoneRecordingResult>
 | **`useDeviceOrientation`** | <code>boolean</code> |
 | **`duration`**             | <code>number</code>  |
 
-
 #### CameraRecordingResult
 
 | Prop      | Type                |
 | --------- | ------------------- |
 | **`url`** | <code>string</code> |
 
-
 #### GrabCameraImageResult
 
 | Prop      | Type                |
 | --------- | ------------------- |
 | **`url`** | <code>string</code> |
-
 
 #### GrabCameraImageOptions
 
@@ -242,7 +237,6 @@ stopMicrophoneRecording() => Promise<undefined | MicrophoneRecordingResult>
 | **`autoOrientation`** | <code>boolean</code> |
 | **`autoAdjust`**      | <code>boolean</code> |
 
-
 #### MicrophoneSessionOptions
 
 | Prop                | Type                 |
@@ -251,13 +245,11 @@ stopMicrophoneRecording() => Promise<undefined | MicrophoneRecordingResult>
 | **`reuseRecorder`** | <code>boolean</code> |
 | **`numChannels`**   | <code>number</code>  |
 
-
 #### StartMicrophoneRecordingOptions
 
 | Prop           | Type                |
 | -------------- | ------------------- |
 | **`duration`** | <code>number</code> |
-
 
 #### MicrophoneRecordingResult
 
