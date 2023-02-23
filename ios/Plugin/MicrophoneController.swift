@@ -236,10 +236,10 @@ extension MicrophoneController: AVAudioRecorderDelegate {
             } catch {
                 CAPLog.print("MicrophoneController.audioRecorderDidFinishRecording() could not deactivate audio session")
             }
-            
+
             do {
                 let finalURL = self.createFileUrl()
-                
+
                 CAPLog.print("MicrophoneController.audioRecorderDidFinishRecording() Trying to copy item...")
                 try FileManager.default.copyItem(at: capture!.url, to: finalURL!)
 
