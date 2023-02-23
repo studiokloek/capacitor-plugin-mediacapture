@@ -7,6 +7,8 @@ class CaptureAudioRecorder: AVAudioRecorder {
 }
 
 @objc(MicrophoneController) class MicrophoneController: NSObject {
+    var originalRecordingSessionCategory: AVAudioSession.Category!
+
     var didStartRecordingBlock: ((String) -> Void)?
     var meteringUpdateBlock: ((Float, Float) -> Void)?
 
@@ -23,10 +25,9 @@ class CaptureAudioRecorder: AVAudioRecorder {
 }
 
 extension MicrophoneController: AVAudioRecorderDelegate {
-
     // MARK: - Session methods
     func startSession( call: CAPPluginCall ) {
-        print("MicrophoneController.startSession()")
+        CAPLog.print("MicrophoneController.startSession()")
 
         if hasSession() {
             return call.reject("Session is already running")
@@ -63,7 +64,7 @@ extension MicrophoneController: AVAudioRecorderDelegate {
     }
 
     func stopSession( call: CAPPluginCall ) {
-        print("MicrophoneController.stopSession()")
+        CAPLog.print("MicrophoneController.stopSession()")
 
         if !hasSession() {
             return call.reject("Session not running")
@@ -71,6 +72,8 @@ extension MicrophoneController: AVAudioRecorderDelegate {
 
         DispatchQueue.global(qos: .userInitiated).async {
             do {
+                self.audioRecorder?.stop()
+
                 try self.audioSession?.setActive(false)
 
                 self.audioSession = nil
@@ -93,6 +96,9 @@ extension MicrophoneController: AVAudioRecorderDelegate {
     // MARK: - Record functions
 
     func startRecording( call: CAPPluginCall ) {
+
+        CAPLog.print("MicrophoneController.startRecording()")
+
         let duration = call.getDouble("duration")
 
         DispatchQueue.global(qos: .userInitiated).async {
@@ -108,10 +114,12 @@ extension MicrophoneController: AVAudioRecorderDelegate {
 
             // prepare recorder
             do {
+                self.originalRecordingSessionCategory = self.audioSession?.category
                 try self.audioSession?.setCategory(AVAudioSession.Category(rawValue: AVAudioSession.Category.record.rawValue))
                 try self.audioSession?.setActive(true)
                 try self.prepareRecorder()
             } catch {
+                call.reject("Could not prepare...")
                 call.reject(error.localizedDescription)
                 return
             }
@@ -138,6 +146,8 @@ extension MicrophoneController: AVAudioRecorderDelegate {
     }
 
     func stopRecording( call: CAPPluginCall) {
+        CAPLog.print("MicrophoneController.stopRecording()")
+
         if !hasSession() {
             return call.reject("No session running")
         }
@@ -154,6 +164,9 @@ extension MicrophoneController: AVAudioRecorderDelegate {
     // MARK: - Util functions
 
     func prepareRecorder() throws {
+
+        CAPLog.print("MicrophoneController.prepareRecorder()")
+
         // re-use recorder?
         if audioReuseRecorder && audioRecorder != nil {
             audioRecorder?.prepareToRecord()
@@ -168,8 +181,8 @@ extension MicrophoneController: AVAudioRecorderDelegate {
         ])
 
         audioRecorder?.delegate = self
-        audioRecorder?.prepareToRecord()
         audioRecorder?.isMeteringEnabled = true
+        audioRecorder?.prepareToRecord()
 
         audioHasRecorded = false
     }
@@ -196,6 +209,11 @@ extension MicrophoneController: AVAudioRecorderDelegate {
 
     // MARK: AVAudioRecorderDelegate
     func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
+
+        CAPLog.print("MicrophoneController.audioRecorderDidFinishRecording()")
+
+        audioRecorder?.stop()
+
         audioMeterTimer?.invalidate()
 
         let capture: CaptureAudioRecorder? = recorder as? CaptureAudioRecorder
@@ -204,25 +222,32 @@ extension MicrophoneController: AVAudioRecorderDelegate {
         capture?.call = nil
 
         if !flag {
-            call?.reject("Recorder finished unsuccessfully")
+            call?.reject("Recorder finished un-successfully")
             return
         }
 
-        let finalURL = createFileUrl()
+        DispatchQueue.global(qos: .userInitiated).async {
+            do {
+                let finalURL = self.createFileUrl()
 
-        do {
-            try audioSession?.setCategory(AVAudioSession.Category(rawValue: AVAudioSession.Category.playback.rawValue))
-            try FileManager.default.copyItem(at: capture!.url, to: finalURL!)
-        } catch {
-            call?.reject(error.localizedDescription)
-            return
+                CAPLog.print("MicrophoneController.audioRecorderDidFinishRecording() trying to set in-active")
+                try self.audioSession?.setActive(false)
+                CAPLog.print("MicrophoneController.audioRecorderDidFinishRecording() trying to set vak original category")
+                try self.audioSession?.setCategory(self.originalRecordingSessionCategory)
+                self.originalRecordingSessionCategory = nil
+                CAPLog.print("MicrophoneController.audioRecorderDidFinishRecording() Trying to copy item...")
+                try FileManager.default.copyItem(at: capture!.url, to: finalURL!)
+
+                let result: [String: Any] = [
+                    "url": finalURL!.absoluteString
+                ]
+
+                call?.resolve(result)
+            } catch {
+                call?.reject(error.localizedDescription)
+            }
         }
 
-        let result: [String: Any] = [
-            "url": finalURL!.absoluteString
-        ]
-
-        call?.resolve(result)
     }
 
     func hasSession() -> Bool {
