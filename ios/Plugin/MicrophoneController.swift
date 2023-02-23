@@ -228,13 +228,18 @@ extension MicrophoneController: AVAudioRecorderDelegate {
 
         DispatchQueue.global(qos: .userInitiated).async {
             do {
-                let finalURL = self.createFileUrl()
-
                 CAPLog.print("MicrophoneController.audioRecorderDidFinishRecording() trying to set in-active")
                 try self.audioSession?.setActive(false)
-                CAPLog.print("MicrophoneController.audioRecorderDidFinishRecording() trying to set vak original category")
+                CAPLog.print("MicrophoneController.audioRecorderDidFinishRecording() trying to set back original category")
                 try self.audioSession?.setCategory(self.originalRecordingSessionCategory)
                 self.originalRecordingSessionCategory = nil
+            } catch {
+                CAPLog.print("MicrophoneController.audioRecorderDidFinishRecording() could not deactivate audio session")
+            }
+            
+            do {
+                let finalURL = self.createFileUrl()
+                
                 CAPLog.print("MicrophoneController.audioRecorderDidFinishRecording() Trying to copy item...")
                 try FileManager.default.copyItem(at: capture!.url, to: finalURL!)
 
