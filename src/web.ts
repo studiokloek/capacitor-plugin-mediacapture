@@ -12,9 +12,34 @@ import type {
   MicrophoneSessionOptions,
   StartCameraRecordingOptions,
   StartMicrophoneRecordingOptions,
+  PermissionStatus,
 } from './definitions';
 
 export class MediaCaptureWeb extends WebPlugin implements MediaCapturePlugin {
+  async checkPermissions(): Promise<PermissionStatus> {
+    console.warn(
+      'MediaCaptureWeb.checkPermissions() is not implemented on this platform.',
+    );
+
+    return {
+      camera: 'granted',
+      microphone: 'granted',
+      photos: 'granted',
+    };
+  }
+
+  async requestPermissions(): Promise<PermissionStatus> {
+    console.warn(
+      'MediaCaptureWeb.checkPermissions() is not implemented on this platform.',
+    );
+
+    return {
+      camera: 'granted',
+      microphone: 'granted',
+      photos: 'granted',
+    };
+  }
+
   // CAMERA
   async startCameraSession(options: CameraSessionOptions): Promise<boolean> {
     console.warn(

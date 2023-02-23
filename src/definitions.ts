@@ -1,3 +1,18 @@
+// PERMISSIONS
+export type MediaCapturePermissionState = PermissionState | 'limited';
+
+export type MediaCapturePermissionType = 'camera' | 'photos' | 'microphone';
+
+export interface PermissionStatus {
+  camera: MediaCapturePermissionState;
+  photos: MediaCapturePermissionState;
+  microphone: MediaCapturePermissionState;
+}
+
+export interface MediaCapturePluginPermissions {
+  permissions: MediaCapturePermissionType[];
+}
+
 // CAMERA
 export interface CameraSessionOptions {
   video?: boolean;
@@ -54,6 +69,12 @@ export interface MicrophoneRecordingResult {
 }
 
 export interface MediaCapturePlugin {
+  // PERMISSIONS
+  checkPermissions(): Promise<PermissionStatus>;
+  requestPermissions(
+    permissions?: MediaCapturePluginPermissions,
+  ): Promise<PermissionStatus>;
+
   // CAMERA
   startCameraSession(options: CameraSessionOptions): Promise<boolean>;
   stopCameraSession(): Promise<boolean>;
