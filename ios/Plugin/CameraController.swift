@@ -160,6 +160,7 @@ extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhoto
 
         func configureImageOutput() throws {
             imageOutput = CaptureImageOutput()
+            imageOutput?.maxPhotoQualityPrioritization = .quality
             imageOutput?.isHighResolutionCaptureEnabled = imageFullFrame
             imageOutput?.setPreparedPhotoSettingsArray([AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])], completionHandler: nil)
 
@@ -653,7 +654,7 @@ extension CameraControllerError: LocalizedError {
         case .invalidCaptureInput:
             return NSLocalizedString("Capture iInput is invalid", comment: "The capture device could not be added as input to the session.")
         case .invalidCaptureOutput:
-            return NSLocalizedString("Caputre output is invalid", comment: "The capture output could not be added to the session.")
+            return NSLocalizedString("Capture output is invalid", comment: "The capture output could not be added to the session.")
         case .invalidOperation:
             return NSLocalizedString("Invalid Operation", comment: "Invalid Operation")
         case .noCamerasAvailable:
