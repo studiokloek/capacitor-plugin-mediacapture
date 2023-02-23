@@ -25,7 +25,7 @@ public class MediaCapturePlugin: CAPPlugin {
 
     // MARK: - Permission
 
-    @objc public func checkCameraPermissions(_ call: CAPPluginCall) {
+    @objc override public func checkPermissions(_ call: CAPPluginCall) {
         var result: [String: Any] = [:]
         for permission in MediaCapturePermissionType.allCases {
             let state: String
@@ -46,7 +46,7 @@ public class MediaCapturePlugin: CAPPlugin {
         call.resolve(result)
     }
 
-    @objc  public func requestCameraPermissions(_ call: CAPPluginCall) {
+    @objc override public func requestPermissions(_ call: CAPPluginCall) {
         // get the list of desired types, if passed
         let typeList = call.getArray("permissions", String.self)?.compactMap({ (type) -> MediaCapturePermissionType? in
             return MediaCapturePermissionType(rawValue: type)
