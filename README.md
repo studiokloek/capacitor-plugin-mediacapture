@@ -13,36 +13,52 @@ npx cap sync
 
 <docgen-index>
 
-- [@studiokloek/capacitor-plugin-mediacapture](#studiokloekcapacitor-plugin-mediacapture)
-  - [Install](#install)
-  - [API](#api)
-    - [startCameraSession(...)](#startcamerasession)
-    - [stopCameraSession()](#stopcamerasession)
-    - [showCameraPreview(...)](#showcamerapreview)
-    - [hideCameraPreview(...)](#hidecamerapreview)
-    - [startCameraRecording(...)](#startcamerarecording)
-    - [stopCameraRecording()](#stopcamerarecording)
-    - [grabCameraImage(...)](#grabcameraimage)
-    - [startMicrophoneSession(...)](#startmicrophonesession)
-    - [stopMicrophoneSession()](#stopmicrophonesession)
-    - [startMicrophoneRecording(...)](#startmicrophonerecording)
-    - [stopMicrophoneRecording()](#stopmicrophonerecording)
-    - [Interfaces](#interfaces)
-      - [CameraSessionOptions](#camerasessionoptions)
-      - [CameraPreviewShowOptions](#camerapreviewshowoptions)
-      - [CameraPreviewHideOptions](#camerapreviewhideoptions)
-      - [StartCameraRecordingOptions](#startcamerarecordingoptions)
-      - [CameraRecordingResult](#camerarecordingresult)
-      - [GrabCameraImageResult](#grabcameraimageresult)
-      - [GrabCameraImageOptions](#grabcameraimageoptions)
-      - [MicrophoneSessionOptions](#microphonesessionoptions)
-      - [StartMicrophoneRecordingOptions](#startmicrophonerecordingoptions)
-      - [MicrophoneRecordingResult](#microphonerecordingresult)
+* [`checkPermissions()`](#checkpermissions)
+* [`requestPermissions(...)`](#requestpermissions)
+* [`startCameraSession(...)`](#startcamerasession)
+* [`stopCameraSession()`](#stopcamerasession)
+* [`showCameraPreview(...)`](#showcamerapreview)
+* [`hideCameraPreview(...)`](#hidecamerapreview)
+* [`startCameraRecording(...)`](#startcamerarecording)
+* [`stopCameraRecording()`](#stopcamerarecording)
+* [`grabCameraImage(...)`](#grabcameraimage)
+* [`startMicrophoneSession(...)`](#startmicrophonesession)
+* [`stopMicrophoneSession()`](#stopmicrophonesession)
+* [`startMicrophoneRecording(...)`](#startmicrophonerecording)
+* [`stopMicrophoneRecording()`](#stopmicrophonerecording)
+* [Interfaces](#interfaces)
+* [Type Aliases](#type-aliases)
 
 </docgen-index>
 
 <docgen-api>
 <!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
+
+### checkPermissions()
+
+```typescript
+checkPermissions() => Promise<PermissionStatus>
+```
+
+**Returns:** <code>Promise&lt;<a href="#permissionstatus">PermissionStatus</a>&gt;</code>
+
+--------------------
+
+
+### requestPermissions(...)
+
+```typescript
+requestPermissions(permissions?: MediaCapturePluginPermissions | undefined) => Promise<PermissionStatus>
+```
+
+| Param             | Type                                                                                    |
+| ----------------- | --------------------------------------------------------------------------------------- |
+| **`permissions`** | <code><a href="#mediacapturepluginpermissions">MediaCapturePluginPermissions</a></code> |
+
+**Returns:** <code>Promise&lt;<a href="#permissionstatus">PermissionStatus</a>&gt;</code>
+
+--------------------
+
 
 ### startCameraSession(...)
 
@@ -56,7 +72,8 @@ startCameraSession(options: CameraSessionOptions) => Promise<boolean>
 
 **Returns:** <code>Promise&lt;boolean&gt;</code>
 
----
+--------------------
+
 
 ### stopCameraSession()
 
@@ -66,7 +83,8 @@ stopCameraSession() => Promise<boolean>
 
 **Returns:** <code>Promise&lt;boolean&gt;</code>
 
----
+--------------------
+
 
 ### showCameraPreview(...)
 
@@ -80,7 +98,8 @@ showCameraPreview(options: CameraPreviewShowOptions) => Promise<boolean>
 
 **Returns:** <code>Promise&lt;boolean&gt;</code>
 
----
+--------------------
+
 
 ### hideCameraPreview(...)
 
@@ -94,7 +113,8 @@ hideCameraPreview(options: CameraPreviewHideOptions) => Promise<boolean>
 
 **Returns:** <code>Promise&lt;boolean&gt;</code>
 
----
+--------------------
+
 
 ### startCameraRecording(...)
 
@@ -108,7 +128,8 @@ startCameraRecording(options: StartCameraRecordingOptions) => Promise<boolean>
 
 **Returns:** <code>Promise&lt;boolean&gt;</code>
 
----
+--------------------
+
 
 ### stopCameraRecording()
 
@@ -118,7 +139,8 @@ stopCameraRecording() => Promise<undefined | CameraRecordingResult>
 
 **Returns:** <code>Promise&lt;<a href="#camerarecordingresult">CameraRecordingResult</a>&gt;</code>
 
----
+--------------------
+
 
 ### grabCameraImage(...)
 
@@ -132,7 +154,8 @@ grabCameraImage(options: GrabCameraImageOptions) => Promise<undefined | GrabCame
 
 **Returns:** <code>Promise&lt;<a href="#grabcameraimageresult">GrabCameraImageResult</a>&gt;</code>
 
----
+--------------------
+
 
 ### startMicrophoneSession(...)
 
@@ -146,7 +169,8 @@ startMicrophoneSession(options: MicrophoneSessionOptions) => Promise<boolean>
 
 **Returns:** <code>Promise&lt;boolean&gt;</code>
 
----
+--------------------
+
 
 ### stopMicrophoneSession()
 
@@ -156,7 +180,8 @@ stopMicrophoneSession() => Promise<boolean>
 
 **Returns:** <code>Promise&lt;boolean&gt;</code>
 
----
+--------------------
+
 
 ### startMicrophoneRecording(...)
 
@@ -170,7 +195,8 @@ startMicrophoneRecording(options: StartMicrophoneRecordingOptions) => Promise<bo
 
 **Returns:** <code>Promise&lt;boolean&gt;</code>
 
----
+--------------------
+
 
 ### stopMicrophoneRecording()
 
@@ -180,9 +206,27 @@ stopMicrophoneRecording() => Promise<undefined | MicrophoneRecordingResult>
 
 **Returns:** <code>Promise&lt;<a href="#microphonerecordingresult">MicrophoneRecordingResult</a>&gt;</code>
 
----
+--------------------
+
 
 ### Interfaces
+
+
+#### PermissionStatus
+
+| Prop             | Type                                                                                |
+| ---------------- | ----------------------------------------------------------------------------------- |
+| **`camera`**     | <code><a href="#mediacapturepermissionstate">MediaCapturePermissionState</a></code> |
+| **`photos`**     | <code><a href="#mediacapturepermissionstate">MediaCapturePermissionState</a></code> |
+| **`microphone`** | <code><a href="#mediacapturepermissionstate">MediaCapturePermissionState</a></code> |
+
+
+#### MediaCapturePluginPermissions
+
+| Prop              | Type                                      |
+| ----------------- | ----------------------------------------- |
+| **`permissions`** | <code>MediaCapturePermissionType[]</code> |
+
 
 #### CameraSessionOptions
 
@@ -194,6 +238,7 @@ stopMicrophoneRecording() => Promise<undefined | MicrophoneRecordingResult>
 | **`position`**        | <code>string</code>  |
 | **`fullFramePhotos`** | <code>boolean</code> |
 
+
 #### CameraPreviewShowOptions
 
 | Prop                       | Type                                                                  |
@@ -203,11 +248,13 @@ stopMicrophoneRecording() => Promise<undefined | MicrophoneRecordingResult>
 | **`gravity`**              | <code>string</code>                                                   |
 | **`fadeDuration`**         | <code>number</code>                                                   |
 
+
 #### CameraPreviewHideOptions
 
 | Prop               | Type                |
 | ------------------ | ------------------- |
 | **`fadeDuration`** | <code>number</code> |
+
 
 #### StartCameraRecordingOptions
 
@@ -217,17 +264,20 @@ stopMicrophoneRecording() => Promise<undefined | MicrophoneRecordingResult>
 | **`useDeviceOrientation`** | <code>boolean</code> |
 | **`duration`**             | <code>number</code>  |
 
+
 #### CameraRecordingResult
 
 | Prop      | Type                |
 | --------- | ------------------- |
 | **`url`** | <code>string</code> |
 
+
 #### GrabCameraImageResult
 
 | Prop      | Type                |
 | --------- | ------------------- |
 | **`url`** | <code>string</code> |
+
 
 #### GrabCameraImageOptions
 
@@ -237,6 +287,7 @@ stopMicrophoneRecording() => Promise<undefined | MicrophoneRecordingResult>
 | **`autoOrientation`** | <code>boolean</code> |
 | **`autoAdjust`**      | <code>boolean</code> |
 
+
 #### MicrophoneSessionOptions
 
 | Prop                | Type                 |
@@ -245,16 +296,36 @@ stopMicrophoneRecording() => Promise<undefined | MicrophoneRecordingResult>
 | **`reuseRecorder`** | <code>boolean</code> |
 | **`numChannels`**   | <code>number</code>  |
 
+
 #### StartMicrophoneRecordingOptions
 
 | Prop           | Type                |
 | -------------- | ------------------- |
 | **`duration`** | <code>number</code> |
 
+
 #### MicrophoneRecordingResult
 
 | Prop      | Type                |
 | --------- | ------------------- |
 | **`url`** | <code>string</code> |
+
+
+### Type Aliases
+
+
+#### MediaCapturePermissionState
+
+<code><a href="#permissionstate">PermissionState</a> | 'limited'</code>
+
+
+#### PermissionState
+
+<code>'prompt' | 'prompt-with-rationale' | 'granted' | 'denied'</code>
+
+
+#### MediaCapturePermissionType
+
+<code>'camera' | 'photos' | 'microphone'</code>
 
 </docgen-api>
