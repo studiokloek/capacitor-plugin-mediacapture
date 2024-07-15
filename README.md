@@ -232,8 +232,9 @@ stopMicrophoneRecording() => Promise<undefined | MicrophoneRecordingResult>
 
 | Prop                  | Type                 |
 | --------------------- | -------------------- |
-| **`video`**           | <code>boolean</code> |
 | **`audio`**           | <code>boolean</code> |
+| **`video`**           | <code>boolean</code> |
+| **`photo`**           | <code>boolean</code> |
 | **`preset`**          | <code>string</code>  |
 | **`position`**        | <code>string</code>  |
 | **`fullFramePhotos`** | <code>boolean</code> |
@@ -258,11 +259,10 @@ stopMicrophoneRecording() => Promise<undefined | MicrophoneRecordingResult>
 
 #### StartCameraRecordingOptions
 
-| Prop                       | Type                 |
-| -------------------------- | -------------------- |
-| **`autoSave`**             | <code>boolean</code> |
-| **`useDeviceOrientation`** | <code>boolean</code> |
-| **`duration`**             | <code>number</code>  |
+| Prop           | Type                 |
+| -------------- | -------------------- |
+| **`autoSave`** | <code>boolean</code> |
+| **`duration`** | <code>number</code>  |
 
 
 #### CameraRecordingResult

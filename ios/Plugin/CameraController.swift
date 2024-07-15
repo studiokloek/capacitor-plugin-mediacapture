@@ -61,7 +61,7 @@ class CaptureFileOutput: AVCaptureFileOutput {
     
     var useAudio = true
     var usePhoto = true
-    var useVideo = truex
+    var useVideo = true
 }
 
 extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhotoCaptureDelegate {
@@ -199,15 +199,15 @@ extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhoto
                 preparePreview()
                 try configureVideoCaptureDevice()
 
-                if (useAudio) {
+                if (self.useAudio) {
                     try configureAudioCaptureDevice()
                 }
 
-                if (usePhoto) {
+                if (self.usePhoto) {
                     try configureImageOutput()
                 }
 
-                if (useVideo) {
+                if (self.useVideo) {
                     try configureVideoOutput()
                 }
                 
