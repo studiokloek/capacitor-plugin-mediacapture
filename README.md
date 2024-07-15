@@ -5,7 +5,7 @@ This capacitor plugin allows iOS applications to capture media from the camera a
 ## Install
 
 ```bash
-npm install @studiokloek/capacitor-plugin-mediacapture
+yarn add @studiokloek/capacitor-plugin-mediacapture
 npx cap sync
 ```
 
