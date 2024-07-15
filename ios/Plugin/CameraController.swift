@@ -58,6 +58,10 @@ class CaptureFileOutput: AVCaptureFileOutput {
     var imageAutoAdjust = true
     var imageAutoSave = false
     var imageFullFrame = true
+    
+    var useAudio = true
+    var usePhoto = true
+    var useVideo = true
 
     var currentOrientation: UIDeviceOrientation = .portrait
 }
@@ -85,7 +89,11 @@ extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhoto
             sessionDevicePosition = AVCaptureDevicePositions[position] ?? AVCaptureDevice.Position.unspecified
 
             // photo still capture quality
-            imageFullFrame = call.getBool("fullFramePhotos") ?? true
+            imageFullFrame = call.getBool("fullFramePhotos") ?? true'
+
+            useAudio = call.getBool("audio") ?? true
+            usePhoto = call.getBool("photo") ?? true
+            useVideo = call.getBool("video") ?? true
         }
 
         func createCaptureSession() {
@@ -193,10 +201,20 @@ extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhoto
                 try configureOptions()
                 createCaptureSession()
                 preparePreview()
-                try configureVideoCaptureDevice()
-                try configureAudioCaptureDevice()
-                try configureImageOutput()
-                try configureVideoOutput()
+                    try configureVideoCaptureDevice()
+
+                if (useAudio) {
+                    try configureAudioCaptureDevice()
+                }
+
+                if (usePhoto) {
+                    try configureImageOutput()
+                }
+
+                if (useVideo) {
+                    try configureVideoOutput()
+                }
+
                 try startSession()
             } catch {
                 DispatchQueue.main.async {
@@ -635,7 +653,7 @@ extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhoto
 
 }
 
-// UIIMAGE EXTENSIONS
+// UIImage EXTENSIONS
 
 extension UIImage {
     struct RotationOptions: OptionSet {

@@ -15,8 +15,9 @@ export interface MediaCapturePluginPermissions {
 
 // CAMERA
 export interface CameraSessionOptions {
-  video?: boolean;
   audio?: boolean;
+  video?: boolean;
+  photo?: boolean;
   preset?: string;
   position?: string;
   fullFramePhotos?: boolean;
@@ -35,7 +36,6 @@ export interface CameraPreviewHideOptions {
 
 export interface StartCameraRecordingOptions {
   autoSave?: boolean;
-  useDeviceOrientation?: boolean;
   duration?: number;
 }
 
