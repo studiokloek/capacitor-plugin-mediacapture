@@ -160,7 +160,7 @@ extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhoto
 
         func configureImageOutput() throws {
             imageOutput = CaptureImageOutput()
-            imageOutput?.maxPhotoQualityPrioritization = .quality
+            imageOutput?.maxPhotoQualityPrioritization = .balanced
             imageOutput?.isHighResolutionCaptureEnabled = imageFullFrame
             imageOutput?.setPreparedPhotoSettingsArray([AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])], completionHandler: nil)
 
@@ -262,15 +262,16 @@ extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhoto
 
         let videoGravity = call.getString("gravity")
         switch videoGravity {
-        case "resize"?: previewVideoGravity = .resize
-        case "fill"?: previewVideoGravity = .resizeAspectFill
-        case "resizeAspect"?: previewVideoGravity = .resizeAspect
-        case "contain"?: previewVideoGravity = .resizeAspect
-        case "resizeAspectFill"?: previewVideoGravity = .resizeAspectFill
-        case "cover"?: previewVideoGravity = .resizeAspectFill
-        default: previewVideoGravity = .resizeAspectFill
+            case "resize"?: previewVideoGravity = .resize
+            case "fill"?: previewVideoGravity = .resizeAspectFill
+            case "resizeAspect"?: previewVideoGravity = .resizeAspect
+            case "contain"?: previewVideoGravity = .resizeAspect
+            case "resizeAspectFill"?: previewVideoGravity = .resizeAspectFill
+            case "cover"?: previewVideoGravity = .resizeAspectFill
+            default: previewVideoGravity = .resizeAspectFill
         }
 
+        
         self.preview?.bounds = self.previewBounds
         self.preview?.videoGravity = self.previewVideoGravity
         self.preview?.position = CGPoint(x: self.previewBounds.midX, y: self.previewBounds.midY)
@@ -287,10 +288,10 @@ extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhoto
         fadeAnim.fromValue = 0
         fadeAnim.toValue = 1
         fadeAnim.duration = duration
-
+        
         DispatchQueue.main.async {
             targetLayer.addSublayer(self.preview!)
-
+                
             CATransaction.begin()
 
             CATransaction.setCompletionBlock {
@@ -354,14 +355,14 @@ extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhoto
             return call.reject("Session not running")
         }
 
-        imageFixOrientation = call.getBool("fixOrientation") ?? true
+        imageFixOrientation = call.getBool("autoOrientation") ?? true
         imageAutoAdjust = call.getBool("autoAdjust") ?? true
         imageAutoSave = call.getBool("autoSave") ?? false
 
         let settings = AVCapturePhotoSettings()
         settings.flashMode = AVCaptureDevice.FlashMode.off
         settings.isHighResolutionPhotoEnabled = false
-        settings.photoQualityPrioritization = .quality
+        settings.photoQualityPrioritization = .balanced
         settings.isAutoRedEyeReductionEnabled = true
 
         imageOutput?.call = call
@@ -556,45 +557,27 @@ extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhoto
     }
 
     func findPreviewOrientation() -> AVCaptureVideoOrientation {
-        if previewUseDeviceOrientation {
-            return getDeviceOriented()
-        }
+        // if videoRecordingUseDeviceOrientation {
+            return getDeviceOrientation()
+        // }
 
-        return getStatusBarOriented()
-    }
-
-    func getDeviceOriented() -> AVCaptureVideoOrientation {
-        switch UIDevice.current.orientation {
-        case .landscapeLeft: return AVCaptureVideoOrientation.landscapeRight // yes right on left :S
-        case .landscapeRight: return AVCaptureVideoOrientation.landscapeLeft
-        case .portraitUpsideDown: return AVCaptureVideoOrientation.portraitUpsideDown
-        default: return AVCaptureVideoOrientation.portrait
-        }
-    }
-
-    func getStatusBarOriented() -> AVCaptureVideoOrientation {
-        switch UIApplication.shared.windows.first?.windowScene?.interfaceOrientation {
-        case .landscapeLeft: return AVCaptureVideoOrientation.landscapeLeft
-        case .landscapeRight: return AVCaptureVideoOrientation.landscapeRight
-        case .portraitUpsideDown: return AVCaptureVideoOrientation.portraitUpsideDown
-        default: return AVCaptureVideoOrientation.portrait
-        }
+        // retuwrn getStatusBarOrientation()
     }
 
     func findVideoRecordingOrientation() -> AVCaptureVideoOrientation {
         if videoRecordingUseDeviceOrientation {
-            return getDeviceOriented()
+            return getDeviceOrientation()
         }
 
-        return getStatusBarOriented()
+        return getStatusBarOrientation()
     }
 
     func findImageOrientation() -> AVCaptureVideoOrientation {
         if imageFixOrientation {
-            return getDeviceOriented()
+            return getDeviceOrientation()
         }
 
-        return getStatusBarOriented()
+        return getStatusBarOrientation()
     }
 
     // MARK: - Permission / device poll methods
@@ -605,6 +588,51 @@ extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhoto
     func isRearCameraAvailable() -> Bool {
         return UIImagePickerController.isCameraDeviceAvailable(UIImagePickerController.CameraDevice.rear)
     }
+
+    func getDeviceOrientation() -> AVCaptureVideoOrientation {    
+        switch UIDevice.current.orientation {
+            case .landscapeLeft:
+                return AVCaptureVideoOrientation.landscapeRight
+            case .landscapeRight:
+                return AVCaptureVideoOrientation.landscapeLeft
+            case .portraitUpsideDown:
+                return AVCaptureVideoOrientation.portraitUpsideDown
+            default: 
+                return AVCaptureVideoOrientation.portrait
+        }
+    }
+
+    func getStatusBarOrientation() -> AVCaptureVideoOrientation {
+        return DispatchQueue.main.sync {
+            // Get the interface orientation incase the UIDevice Orientation doesn't exist.
+            let interfaceOrientation: UIInterfaceOrientation?
+            if #available(iOS 15, *) {
+                interfaceOrientation = UIApplication.shared.connectedScenes
+                // Keep only the first `UIWindowScene`
+                    .first(where: { $0 is UIWindowScene })
+                // Get its associated windows
+                    .flatMap({ $0 as? UIWindowScene })?.interfaceOrientation
+            } else {
+                interfaceOrientation = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation
+            }
+            
+            guard interfaceOrientation != nil else {
+                return getDeviceOrientation();
+            }
+            
+            switch interfaceOrientation {
+            case .landscapeRight:
+                return AVCaptureVideoOrientation.landscapeRight;
+            case .landscapeLeft:
+                return AVCaptureVideoOrientation.landscapeLeft;
+            case .portraitUpsideDown:
+                return AVCaptureVideoOrientation.portraitUpsideDown;
+            default:
+                return AVCaptureVideoOrientation.portrait;
+            }
+        }
+    }
+
 }
 
 // UIIMAGE EXTENSIONS

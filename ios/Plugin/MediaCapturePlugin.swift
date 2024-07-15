@@ -87,16 +87,19 @@ public class MediaCapturePlugin: CAPPlugin {
 
     // MARK: - Camera
     @objc func startCameraSession(_ call: CAPPluginCall) {
-        AVCaptureDevice.requestAccess(for: .video, completionHandler: { (granted: Bool) in
-            guard granted else {
-                call.reject("permission failed")
-                return
-            }
-
-            DispatchQueue.main.async {
-                self.cameraController.startSession(call: call)
-            }
-        })
+        DispatchQueue.main.async {
+            AVCaptureDevice.requestAccess(for: .video, completionHandler: { (granted: Bool) in
+                
+                guard granted else {
+                    call.reject("permission failed")
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    self.cameraController.startSession(call: call)
+                }
+            })
+        }
     }
 
     @objc func stopCameraSession(_ call: CAPPluginCall) {
@@ -106,22 +109,21 @@ public class MediaCapturePlugin: CAPPlugin {
     }
 
     @objc func showCameraPreview(_ call: CAPPluginCall) {
-
-        guard let targetLayer = self.webView?.superview?.layer else {
-            call.reject("Could not find target layer")
-            return
-        }
-
-        AVCaptureDevice.requestAccess(for: .video, completionHandler: { (granted: Bool) in
-            guard granted else {
-                call.reject("permission failed")
+        DispatchQueue.main.async {
+            guard let targetLayer = self.webView?.superview?.layer else {
+                call.reject("Could not find target layer")
                 return
             }
 
-            DispatchQueue.main.async {
+            AVCaptureDevice.requestAccess(for: .video, completionHandler: { (granted: Bool) in
+                guard granted else {
+                    call.reject("permission failed")
+                    return
+                }
+
                 self.cameraController.showPreview(call: call, targetLayer: targetLayer)
-            }
-        })
+            })
+        }
     }
 
     @objc func hideCameraPreview(_ call: CAPPluginCall) {
@@ -151,16 +153,17 @@ public class MediaCapturePlugin: CAPPlugin {
     // MARK: - Microphone
 
     @objc func startMicrophoneSession(_ call: CAPPluginCall) {
-        AVCaptureDevice.requestAccess(for: .audio, completionHandler: { (granted: Bool) in
-            guard granted else {
-                call.reject("permission failed")
-                return
-            }
-
-            DispatchQueue.main.async {
+        DispatchQueue.main.async {
+            AVCaptureDevice.requestAccess(for: .audio, completionHandler: { (granted: Bool) in
+                guard granted else {
+                    call.reject("permission failed")
+                    return
+                }
+                
                 self.microphoneController.startSession(call: call)
-            }
-        })
+                
+            })
+        }
     }
 
     @objc func stopMicrophoneSession(_ call: CAPPluginCall) {
