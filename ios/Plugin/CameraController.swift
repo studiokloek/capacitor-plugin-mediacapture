@@ -61,9 +61,7 @@ class CaptureFileOutput: AVCaptureFileOutput {
     
     var useAudio = true
     var usePhoto = true
-    var useVideo = true
-
-    var currentOrientation: UIDeviceOrientation = .portrait
+    var useVideo = truex
 }
 
 extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhotoCaptureDelegate {
@@ -76,8 +74,6 @@ extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhoto
             return call.reject("Session is already running")
         }
 
-        NotificationCenter.default.addObserver(self, selector: #selector(orientationChanged), name: UIDevice.orientationDidChangeNotification, object: nil)
-
         // audio / video?
         func configureOptions() throws {
             // determine preset
@@ -89,7 +85,7 @@ extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhoto
             sessionDevicePosition = AVCaptureDevicePositions[position] ?? AVCaptureDevice.Position.unspecified
 
             // photo still capture quality
-            imageFullFrame = call.getBool("fullFramePhotos") ?? true'
+            imageFullFrame = call.getBool("fullFramePhotos") ?? true
 
             useAudio = call.getBool("audio") ?? true
             usePhoto = call.getBool("photo") ?? true
@@ -201,7 +197,7 @@ extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhoto
                 try configureOptions()
                 createCaptureSession()
                 preparePreview()
-                    try configureVideoCaptureDevice()
+                try configureVideoCaptureDevice()
 
                 if (useAudio) {
                     try configureAudioCaptureDevice()
@@ -214,7 +210,7 @@ extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhoto
                 if (useVideo) {
                     try configureVideoOutput()
                 }
-
+                
                 try startSession()
             } catch {
                 DispatchQueue.main.async {
@@ -253,11 +249,6 @@ extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhoto
 
             call.resolve()
         }
-    }
-
-    // MARK: - Orienatation
-    @objc func orientationChanged() {
-        currentOrientation = UIDevice.current.orientation
     }
 
     // MARK: - Preview methods
@@ -382,9 +373,11 @@ extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhoto
         settings.isHighResolutionPhotoEnabled = false
         settings.photoQualityPrioritization = .balanced
         settings.isAutoRedEyeReductionEnabled = true
-
-        imageOutput?.call = call
-        imageOutput?.capturePhoto(with: settings, delegate: self)
+        
+        DispatchQueue.main.async {
+            self.imageOutput?.call = call
+            self.imageOutput?.capturePhoto(with: settings, delegate: self)
+        }
     }
 
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
@@ -415,16 +408,18 @@ extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhoto
 
         if self.imageFixOrientation {
             var tempImage = CIImage(cgImage: imageData)
-
+            
+            let currentOrientation = findImageOrientation();
+            
             switch currentOrientation {
-            case .portrait:
-                tempImage = tempImage.oriented(forExifOrientation: 6)
-            case .landscapeRight:
-                tempImage = tempImage.oriented(forExifOrientation: 3)
-            case .landscapeLeft:
-                tempImage = tempImage.oriented(forExifOrientation: 1)
-            default:
-                break
+                case .portrait:
+                    tempImage = tempImage.oriented(.right)
+                case .landscapeRight:
+                    tempImage = tempImage.oriented(.downMirrored)
+                case .landscapeLeft:
+                    tempImage = tempImage.oriented(.upMirrored)
+                default:
+                    break
             }
 
             imageData = CIContext(options: nil).createCGImage(tempImage, from: tempImage.extent)!
@@ -581,7 +576,7 @@ extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhoto
 
         // retuwrn getStatusBarOrientation()
     }
-
+    
     func findVideoRecordingOrientation() -> AVCaptureVideoOrientation {
         if videoRecordingUseDeviceOrientation {
             return getDeviceOrientation()
@@ -589,7 +584,7 @@ extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhoto
 
         return getStatusBarOrientation()
     }
-
+    
     func findImageOrientation() -> AVCaptureVideoOrientation {
         if imageFixOrientation {
             return getDeviceOrientation()
@@ -597,6 +592,7 @@ extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhoto
 
         return getStatusBarOrientation()
     }
+
 
     // MARK: - Permission / device poll methods
     func isFrontCameraAvailable() -> Bool {
@@ -653,7 +649,7 @@ extension CameraController: AVCaptureFileOutputRecordingDelegate, AVCapturePhoto
 
 }
 
-// UIImage EXTENSIONS
+// UIIMAGE EXTENSIONS
 
 extension UIImage {
     struct RotationOptions: OptionSet {
@@ -677,6 +673,23 @@ extension UIImage {
         let image: UIImage = UIImage.init(cgImage: cgImage)
 
         return image
+    }
+}
+
+extension UIImage.Orientation {
+    var exifOrientation: Int32 {
+        switch self {
+            case .up: return 1
+            case .down: return 3
+            case .left: return 8
+            case .right: return 6
+            case .upMirrored: return 2
+            case .downMirrored: return 4
+            case .leftMirrored: return 5
+            case .rightMirrored: return 7
+        @unknown default:
+            return 1
+        }
     }
 }
 
