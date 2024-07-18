@@ -245,9 +245,9 @@ stopMicrophoneRecording() => Promise<undefined | MicrophoneRecordingResult>
 | Prop                       | Type                                                                  |
 | -------------------------- | --------------------------------------------------------------------- |
 | **`frame`**                | <code>{ x: number; y: number; width: number; height: number; }</code> |
-| **`useDeviceOrientation`** | <code>boolean</code>                                                  |
 | **`gravity`**              | <code>string</code>                                                   |
 | **`fadeDuration`**         | <code>number</code>                                                   |
+| **`useDeviceOrientation`** | <code>boolean</code>                                                  |
 
 
 #### CameraPreviewHideOptions
@@ -259,10 +259,11 @@ stopMicrophoneRecording() => Promise<undefined | MicrophoneRecordingResult>
 
 #### StartCameraRecordingOptions
 
-| Prop           | Type                 |
-| -------------- | -------------------- |
-| **`autoSave`** | <code>boolean</code> |
-| **`duration`** | <code>number</code>  |
+| Prop                       | Type                 |
+| -------------------------- | -------------------- |
+| **`autoSave`**             | <code>boolean</code> |
+| **`duration`**             | <code>number</code>  |
+| **`useDeviceOrientation`** | <code>boolean</code> |
 
 
 #### CameraRecordingResult
@@ -281,11 +282,11 @@ stopMicrophoneRecording() => Promise<undefined | MicrophoneRecordingResult>
 
 #### GrabCameraImageOptions
 
-| Prop                  | Type                 |
-| --------------------- | -------------------- |
-| **`autoSave`**        | <code>boolean</code> |
-| **`autoOrientation`** | <code>boolean</code> |
-| **`autoAdjust`**      | <code>boolean</code> |
+| Prop                       | Type                 |
+| -------------------------- | -------------------- |
+| **`autoSave`**             | <code>boolean</code> |
+| **`useDeviceOrientation`** | <code>boolean</code> |
+| **`autoAdjust`**           | <code>boolean</code> |
 
 
 #### MicrophoneSessionOptions
