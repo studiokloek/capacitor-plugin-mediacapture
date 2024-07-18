@@ -25,9 +25,9 @@ export interface CameraSessionOptions {
 
 export interface CameraPreviewShowOptions {
   frame?: { x: number; y: number; width: number; height: number };
-  useDeviceOrientation?: boolean;
   gravity?: string;
   fadeDuration?: number;
+  useDeviceOrientation?: boolean;
 }
 
 export interface CameraPreviewHideOptions {
@@ -37,6 +37,7 @@ export interface CameraPreviewHideOptions {
 export interface StartCameraRecordingOptions {
   autoSave?: boolean;
   duration?: number;
+  useDeviceOrientation?: boolean;
 }
 
 export interface CameraRecordingResult {
@@ -45,7 +46,7 @@ export interface CameraRecordingResult {
 
 export interface GrabCameraImageOptions {
   autoSave?: boolean;
-  autoOrientation?: boolean;
+  useDeviceOrientation?: boolean;
   autoAdjust?: boolean;
 }
 
