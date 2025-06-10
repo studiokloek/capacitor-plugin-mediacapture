@@ -290,7 +290,7 @@
             self.preview?.bounds = self.previewBounds
             self.preview?.videoGravity = self.previewVideoGravity
             self.preview?.position = CGPoint(x: self.previewBounds.midX, y: self.previewBounds.midY)
-            self.preview?.connection?.videoOrientation = findPreviewOrientation()
+            self.preview?.connection?.videoOrientation = getCurrentCameraOrientation()
             self.preview?.connection?.isEnabled = true
 
             var duration = call.getDouble("fadeDuration") ?? 0
@@ -416,13 +416,8 @@
             if self.imageUseDeviceOrientation {
                 var tempImage = CIImage(cgImage: imageData)
                 
-                let currentOrientation = findImageOrientation();
+                let currentOrientation = getCurrentCameraOrientation();
                 
-//
-                
-                
-                // print("CameraController.photoOutput() position", self.sessionDevicePosition.rawValue)
-                // print("CameraController.photoOutput() currentOrientation", currentOrientation.rawValue)
 
                 switch currentOrientation {
                     case .portrait:
@@ -504,7 +499,7 @@
             // fix orientation
             let connection: AVCaptureConnection? = videoRecording?.connection(with: AVMediaType.video)
             if connection?.isVideoOrientationSupported ?? false {
-                connection?.videoOrientation = findVideoRecordingOrientation()
+                connection?.videoOrientation = getCurrentCameraOrientation()
             }
 
             videoRecording?.call = call
@@ -585,29 +580,61 @@
         func isRecording() -> Bool {
             return videoRecording != nil && videoRecording!.isRecording
         }
-
-        func findPreviewOrientation() -> AVCaptureVideoOrientation {
-             if previewUseDeviceOrientation {
-                return getDeviceOrientation()
-             }
-
-             return getStatusBarOrientation()
-        }
         
-        func findVideoRecordingOrientation() -> AVCaptureVideoOrientation {
-            if videoRecordingUseDeviceOrientation {
-                return getDeviceOrientation()
+        func getCurrentCameraOrientation() -> AVCaptureVideoOrientation {
+            
+            // Helper: Haal interface orientation uit actieve UIWindowScene
+            func interfaceOrientation() -> UIInterfaceOrientation? {
+                if Thread.isMainThread {
+                    return extract()
+                } else {
+                    return DispatchQueue.main.sync {
+                        extract()
+                    }
+                }
+            }
+            
+            // Helper: extractie van UIWindowScene interfaceOrientation
+            func extract() -> UIInterfaceOrientation? {
+                return (UIApplication.shared.connectedScenes
+                    .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene)?
+                    .interfaceOrientation
+            }
+            
+            // Helper: Zet UIInterfaceOrientation om naar AVCaptureVideoOrientation
+            func map(_ orientation: UIInterfaceOrientation) -> AVCaptureVideoOrientation {
+                switch orientation {
+                case .landscapeLeft:
+                    return .landscapeLeft
+                case .landscapeRight:
+                    return .landscapeRight
+                case .portraitUpsideDown:
+                    return .portraitUpsideDown
+                default:
+                    return .portrait
+                }
+            }
+            
+            // Helper: Fallback via UIDevice.orientation (gespiegeld bij landscape)
+            func fallback() -> AVCaptureVideoOrientation {
+                switch UIDevice.current.orientation {
+                case .landscapeLeft:
+                    return .landscapeRight
+                case .landscapeRight:
+                    return .landscapeLeft
+                case .portraitUpsideDown:
+                    return .portraitUpsideDown
+                default:
+                    return .portrait
+                }
             }
 
-            return getStatusBarOrientation()
-        }
-        
-        func findImageOrientation() -> AVCaptureVideoOrientation {
-            if imageUseDeviceOrientation {
-                return getDeviceOrientation()
+            // Uitvoering
+            if let orientation = interfaceOrientation() {
+                return map(orientation)
+            } else {
+                return fallback()
             }
-
-            return getStatusBarOrientation()
         }
 
 
