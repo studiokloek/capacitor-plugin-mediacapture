@@ -264,9 +264,15 @@
                 return call.reject("Preview already showing")
             }
 
-            let rect = call.getObject("bounds", ["x": 0, "y": 0, "width": 1920, "height": 1080])
-            previewBounds = CGRect.init(x: rect["x"] as! Int, y: rect["y"] as! Int, width: rect["width"] as! Int, height: rect["height"] as! Int)
-
+           let rect: [String: Int] = call.getObject("bounds", ["x": 0, "y": 0, "width": 1920, "height": 1080]).compactMapValues {
+                  if let number = $0 as? NSNumber {
+                      return number.intValue
+                  }
+                  return nil
+              }
+                
+            previewBounds = CGRect.init(x: rect["x"] ?? 0, y: rect["y"] ?? 0, width: rect["width"] ?? 1920, height: rect["height"] ?? 1080)
+    
             previewUseDeviceOrientation = call.getBool("useDeviceOrientation") ?? false
 
             let videoGravity = call.getString("gravity")
@@ -415,8 +421,8 @@
 //
                 
                 
-                print("CameraController.photoOutput() position", self.sessionDevicePosition.rawValue)
-                print("CameraController.photoOutput() currentOrientation", currentOrientation.rawValue)
+                // print("CameraController.photoOutput() position", self.sessionDevicePosition.rawValue)
+                // print("CameraController.photoOutput() currentOrientation", currentOrientation.rawValue)
 
                 switch currentOrientation {
                     case .portrait:
